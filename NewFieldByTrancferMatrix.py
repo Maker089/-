@@ -34,13 +34,14 @@ def GetInTE_Ey(x_pos):
 
 #получаем значение полей (Ey and H = Hz) при данной позиции x и при данной длинне l (на которую хотим посмотреть). На вход идут напряженности электрического и магнитного полей в тьочке x, а на выходе получаем значение напряженностей в точке x+l. Важно! - преобразоание в однородном слое, где epsilone == const
 def GetNewFieldComponentTE(x_pos_start, transferLong, fieldH, fieldEy):
+    xMiddle = x_pos_start + transferLong/2
 
-    transferMatrix = np.array([[np.cos(kx * transferLong), i * w * epsl0 * const.GetEpsilone(x_pos_start) * (1/kx) * np.sin(kx * transferLong)],
-                           [i * kx * np.sin(kx * transferLong) / (w * epsl0 * const.GetEpsilone(x_pos_start)), np.cos(kx * transferLong)]])
+    transferMatrix = np.array([[np.cos(kx * transferLong), i * w * epsl0 * const.GetEpsilone(xMiddle) * (1/kx) * np.sin(kx * transferLong)],
+                           [i * kx * np.sin(kx * transferLong) / (w * epsl0 * const.GetEpsilone(xMiddle)), np.cos(kx * transferLong)]])
 
     startFieldVector = np.transpose(np.array([fieldH, fieldEy]))
 
-    NewEx = -kx/(w * epsl0 * const.GetEpsilone(x_pos_start)) * np.dot(transferMatrix, startFieldVector)[0]
+    NewEx = -kx/(w * epsl0 * const.GetEpsilone(xMiddle)) * np.dot(transferMatrix, startFieldVector)[0]
 
     return {"H": np.dot(transferMatrix, startFieldVector)[0], "Ex": NewEx, "Ey": np.dot(transferMatrix, startFieldVector)[1]}
 
@@ -68,16 +69,17 @@ def GetInTM_Hy(x_pos):
 
 
 # получаем значение полей при данной позиции x и при данной длинне l (на которую хотим посмотреть). На вход идут напряженности электрического и магнитного полей в тьочке x, а на выходе получаем значение напряженностей в точке x+l. Важно! - преобразоание в однородном слое, где epsilone == const
-def GetNewFieldComponentTM(x_pos_start, transferLong):
+def GetNewFieldComponentTM(x_pos_start, transferLong, fieldE, fieldHy):
+    xMiddle = x_pos_start + transferLong/2
     transferMatrix = np.array(
-        [[np.cos(kx * transferLong), i * w * mu0 * const.GetMu(x_pos_start) * (1/kx) * np.sin(kx * transferLong)],
-         [i * kx * np.sin(kx * transferLong) / (w * mu0 * const.GetMu(x_pos_start)), np.cos(kx * transferLong)]]
+        [[np.cos(kx * transferLong), i * w * mu0 * const.GetMu(xMiddle) * (1/kx) * np.sin(kx * transferLong)],
+         [i * kx * np.sin(kx * transferLong) / (w * mu0 * const.GetMu(xMiddle)), np.cos(kx * transferLong)]]
     )
 
     startFieldVector = np.transpose(
-        np.array([GetInTM_E(x_pos_start, False), GetInTM_Hy(x_pos_start)]))
+        np.array([fieldE, fieldHy]))
 
-    NewHx = ky / (w * mu0 * const.GetMu(x_pos_start)) * np.dot(transferMatrix, startFieldVector)[0]
+    NewHx = ky / (w * mu0 * const.GetMu(xMiddle)) * np.dot(transferMatrix, startFieldVector)[0]
 
     return {"E": np.dot(transferMatrix, startFieldVector)[0], "Hx": NewHx,
             "Hy": np.dot(transferMatrix, startFieldVector)[1]}

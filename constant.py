@@ -1,7 +1,7 @@
 import numpy as np
 
-PlateLong = 1
-PlatePositionStart = 1
+PlateLong = 5
+PlatePositionStart = 5
 AngularFrecuncy = 1
 Epsilone_0 = 1
 Mu_0 = 1
@@ -35,8 +35,8 @@ def GetMu0():
 def GetEpsilone(x_position):
     plateEpsilone = EpsilonePlate
 
-    if (GetPlatePosition().get('startPosition') >= x_position
-            & x_position <= GetPlatePosition().get('endPosition')):
+    if (GetPlatePosition().get('startPosition') <= x_position
+            and x_position <= GetPlatePosition().get('endPosition')):
         return plateEpsilone
     else:
         return 1 #возможно стоит заменить на ноль, но это зависит от того как используем в формулах (может вылезти ошибк аделения на ноль)
@@ -44,8 +44,8 @@ def GetEpsilone(x_position):
 def GetMu(x_position):
     plateMu = MuPlate
 
-    if (GetPlatePosition().get('startPosition') >= x_position
-            & x_position <= GetPlatePosition().get('endPosition')):
+    if (GetPlatePosition().get('startPosition') <= x_position
+            and x_position <= GetPlatePosition().get('endPosition')):
         return plateMu
     else:
         return 1
@@ -58,8 +58,8 @@ def GetRefractiveIndex(x_position):
 def GetHi():
     plateHi = HiPlate
     def HiFunction(x_position):
-        if (GetPlatePosition().get('startPosition') >= x_position
-                & x_position <= GetPlatePosition().get('endPosition')):
+        if ( x_position >= GetPlatePosition().get('startPosition')
+                and x_position <= GetPlatePosition().get('endPosition') ):
             return plateHi
         else:
             return 0

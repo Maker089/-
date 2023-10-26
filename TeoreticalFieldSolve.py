@@ -12,7 +12,7 @@ i = complex(0, 1)
 w = const.GetAngelFrecuncy()
 k = const.KLong
 mu0 = const.GetMu0()
-XMid = const.PlatePositionStart + const.PlateLong/2
+XMid = const.GetPlatePosition()['startPosition'] + const.GetPlateLong()/2
 
 def E0(xPosition):
     return np.exp(i * (w/c) * xPosition)
@@ -95,7 +95,7 @@ def Bi(Number):
 
     return Fi(Number) + sumOfGElements
 
-# Elector Field E = E_0(x) + w^2/c^2 * \sum_j w^2/(w_j^2 - w^2) * b_j * J_j
+# Elector Field Ey == E = E_0(x) + w^2/c^2 * \sum_j w^2/(w_j^2 - w^2) * b_j * J_j
 def TeorFieldE(xPosition):
 
     sumOfComponents = 0
